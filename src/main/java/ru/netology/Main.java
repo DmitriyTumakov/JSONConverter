@@ -34,9 +34,36 @@ public class Main {
         String jsonCSV = listToJson(listCSV);
         writeString(jsonCSV, "data.json");
 
-//        Создание файла JSON из XML файла
+        // Создание файла JSON из XML файла
         String jsonXML = listToJson(listXML);
         writeString(jsonXML, "data2.json");
+
+        // JSON Parser
+        String json = readString("new_data.json");
+        List<Employee> employees = jsonToList(json);
+        System.out.println(employees.toString());
+    }
+
+    private static List<Employee> jsonToList(String json) {
+        Type listType = new TypeToken<List<Employee>>() {}.getType();
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        return gson.fromJson(json, listType);
+    }
+
+    private static String readString(String path) {
+        try (BufferedReader bf = new BufferedReader(new FileReader(path))) {
+            StringBuilder sb = new StringBuilder();
+            String s;
+            while ((s = bf.readLine()) != null) {
+                sb.append(s);
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private static List<Employee> parseXML(String fileNameXML) throws ParserConfigurationException, IOException, SAXException {
